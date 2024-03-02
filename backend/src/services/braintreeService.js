@@ -10,7 +10,7 @@ const gateway = new braintree.BraintreeGateway({
 exports.processPayment = async (paymentDetails) => {
   try {
     const result = await gateway.transaction.sale({
-      amount: paymentDetails.amount,
+      amount: paymentDetails.price,
       creditCard: {
         number: paymentDetails.creditCard.number,
         expirationDate: `${paymentDetails.creditCard.expirationMonth}/${paymentDetails.creditCard.expirationYear}`,
