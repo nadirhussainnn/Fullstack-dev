@@ -1,9 +1,10 @@
 const braintree = require("braintree");
-const gateway = braintree.connect({
+
+const gateway = new braintree.BraintreeGateway({
   environment: braintree.Environment.Sandbox,
-  merchantId: "merchant_id",
-  publicKey: "public_key",
-  privateKey: "private_key",
+  merchantId: process.env.BRAIN_TREE_MERCHANT_ID,
+  publicKey: process.env.BRAIN_TREE_PUBLIC_KEY,
+  privateKey: process.env.BRAIN_TREE_PRIVATE_KEY,
 });
 
 exports.processPayment = async (paymentDetails) => {

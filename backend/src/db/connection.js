@@ -2,13 +2,9 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    const uri = "mongodb://localhost:27017/payment_gateway";
-
-    await mongoose.connect(uri, {
+    await mongoose.connect(process.env.DB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
     });
 
     console.log("MongoDB connected successfully");
