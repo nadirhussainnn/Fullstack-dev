@@ -5,7 +5,7 @@ describe("Payment API", () => {
   it("should process payment successfully", async () => {
     const paymentData = {
       price: 100,
-      currency: "USD",
+      currency: "SCG",
       customerName: "John Doe",
       creditCard: {
         holderName: "John Doe",
@@ -30,7 +30,7 @@ describe("Payment API", () => {
   it("should return error for invalid payment data", async () => {
     const invalidPaymentData = {
       // price: 50,
-      currency: "USD",
+      currency: "SCG",
       customerName: "John Doe",
       creditCard: {
         holderName: "John Doe",
@@ -46,5 +46,24 @@ describe("Payment API", () => {
       .send(invalidPaymentData);
 
     expect(response.statusCode).toBe(400);
+  });
+  it("should return error for invalid payment data", async () => {
+    const invalidPaymentData = {
+      price: 50,
+      currency: "USD",
+      customerName: "John Doe",
+      creditCard: {
+        holderName: "John Doe",
+        expirationMonth: "12",
+        expirationYear: "2023",
+        cvv: "123",
+      },
+    };
+
+    const response = await request(app)
+      .post("/payment")
+      .send(invalidPaymentData);
+
+    expect(response?.statusCode).toBe(400);
   });
 });

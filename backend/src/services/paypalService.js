@@ -1,4 +1,6 @@
 const paypal = require("paypal-rest-sdk");
+const ErrorHandler = require("../utils/ErrorHandler");
+const catchAsyncError = require("../middleware/catchAsyncError");
 
 paypal.configure({
   mode: "sandbox",
@@ -6,7 +8,7 @@ paypal.configure({
   client_secret: process.env.PAYPAL_SECRET,
 });
 
-exports.processPayment = async (paymentDetails) => {
+exports.processPayment = catchAsyncError(async (paymentDetails) => {
   const createPaymentJson = {
     intent: "sale",
     payer: {
@@ -26,7 +28,7 @@ exports.processPayment = async (paymentDetails) => {
     transactions: [
       {
         amount: {
-          total: paymentDetails.amount,
+          total: paymentDetails.price,
           currency: paymentDetails.currency,
         },
       },
@@ -36,7 +38,8 @@ exports.processPayment = async (paymentDetails) => {
   const payment = await new Promise((resolve, reject) => {
     paypal.payment.create(createPaymentJson, function (error, payment) {
       if (error) {
-        reject(error);
+        const { message, httpStatusCode } = error.response;
+        reject(new ErrorHandler(message, httpStatusCode));
       } else {
         resolve(payment);
       }
@@ -52,4 +55,4 @@ exports.processPayment = async (paymentDetails) => {
       errors: payment.failure_reason,
     };
   }
-};
+});

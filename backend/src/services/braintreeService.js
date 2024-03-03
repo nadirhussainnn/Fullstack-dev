@@ -13,7 +13,9 @@ exports.processPayment = async (paymentDetails) => {
       amount: paymentDetails.price,
       creditCard: {
         number: paymentDetails.creditCard.number,
-        expirationDate: `${paymentDetails.creditCard.expirationMonth}/${paymentDetails.creditCard.expirationYear}`,
+        expirationDate: `${Number(
+          paymentDetails.creditCard.expirationMonth
+        )}/${Number(paymentDetails.creditCard.expirationYear)}`,
         cvv: paymentDetails.creditCard.cvv,
       },
       options: {
@@ -24,6 +26,7 @@ exports.processPayment = async (paymentDetails) => {
     if (result.success) {
       return { success: true, transactionId: result.transaction.id };
     } else {
+      console.log(result.errors);
       return {
         success: false,
         message: "Payment failed",
